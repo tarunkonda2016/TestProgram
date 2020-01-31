@@ -13,4 +13,18 @@ export const PizzaActionCreator = {
       data,
     };
   },
+  getDataMinus: (typePizza, add) => {
+    return {
+      type: PizzaActions.MINUS_QUANTITY,
+      typePizza,
+      add,
+    };
+  },
+  getDataAdd: (typePizza, add) => {
+    return {
+      type: PizzaActions.MINUS_QUANTITY,
+      typePizza,
+      add,
+    };
+  },
 };

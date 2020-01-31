@@ -8,8 +8,10 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import {connect} from 'react-redux';
+import QuantityComponent from './QuantityComponent';
 
-export default class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,6 +26,7 @@ export default class App extends Component {
     };
     this.customerClick = this.customerClick.bind(this);
     this.clear = this.clear.bind(this);
+    this.colorState = this.colorState.bind(this);
   }
 
   clear = () => {
@@ -87,40 +90,56 @@ export default class App extends Component {
     }
   }
 
+  colorState = value => {
+    let colorState = this.state.selected;
+    if (
+      colorState === value ||
+      colorState === value ||
+      colorState === value ||
+      colorState === value
+    ) {
+      return 'orange';
+    } else {
+      return null;
+    }
+  };
+
   render() {
+    console.log('data', this.props.reducerData);
+
     return (
       <>
         <SafeAreaView style={styles.safeAreaContainer}>
           <StatusBar />
           <View style={styles.container}>
-            <View style={{margin: 5}}>
+            <View style={styles.btnStyleView}>
               <Button
                 title={'Default Customer'}
-                color={this.state.selected === 'default' ? 'orange' : null}
+                color={this.colorState('default')}
                 onPress={() => this.customerClick('default')}
               />
             </View>
 
-            <View style={{margin: 5}}>
+            <View style={styles.btnStyleView}>
               <Button
                 title={'Infosys Customer'}
-                color={this.state.selected === 'infosys' ? 'orange' : null}
+                color={this.colorState('infosys')}
                 onPress={() => this.customerClick('infosys')}
               />
             </View>
 
-            <View style={{margin: 5}}>
+            <View style={styles.btnStyleView}>
               <Button
                 title={'Amazon Customer'}
-                color={this.state.selected === 'amazon' ? 'orange' : null}
+                color={this.colorState('amazon')}
                 onPress={() => this.customerClick('amazon')}
               />
             </View>
 
-            <View style={{margin: 5}}>
+            <View style={styles.btnStyleView}>
               <Button
                 title={'Facebook Customer'}
-                color={this.state.selected === 'fb' ? 'orange' : null}
+                color={this.colorState('fb')}
                 onPress={() => this.customerClick('fb')}
               />
             </View>
@@ -131,43 +150,7 @@ export default class App extends Component {
                 <Text style={{fontSize: 15, color: 'grey'}}>$269.99</Text>
               </Text>
 
-              <TouchableOpacity
-                style={{width: '10%'}}
-                onPress={() =>
-                  this.state.smallPizzaQuantity > 0
-                    ? this.setState(
-                        {smallPizzaQuantity: this.state.smallPizzaQuantity - 1},
-                        () => {
-                          this.total();
-                        },
-                      )
-                    : null
-                }>
-                <Text style={{fontSize: 20, color: 'black'}}>-</Text>
-              </TouchableOpacity>
-
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: 'black',
-                  width: '10%',
-                  marginHorizontal: 5,
-                }}>
-                {this.state.smallPizzaQuantity}
-              </Text>
-
-              <TouchableOpacity
-                style={{width: '10%'}}
-                onPress={() =>
-                  this.setState(
-                    {smallPizzaQuantity: this.state.smallPizzaQuantity + 1},
-                    () => {
-                      this.total();
-                    },
-                  )
-                }>
-                <Text style={{fontSize: 20, color: 'black'}}>+</Text>
-              </TouchableOpacity>
+              <QuantityComponent type={'small'} />
             </View>
 
             <View style={{flexDirection: 'row', margin: 10}}>
@@ -175,47 +158,7 @@ export default class App extends Component {
                 Medium Pizza{' '}
                 <Text style={{fontSize: 15, color: 'grey'}}>$322.99</Text>
               </Text>
-
-              <TouchableOpacity
-                style={{width: '10%'}}
-                onPress={() =>
-                  this.state.mediumPizzaQuantity > 0
-                    ? this.setState(
-                        {
-                          mediumPizzaQuantity:
-                            this.state.mediumPizzaQuantity - 1,
-                        },
-                        () => {
-                          this.total();
-                        },
-                      )
-                    : null
-                }>
-                <Text style={{fontSize: 20, color: 'black'}}>-</Text>
-              </TouchableOpacity>
-
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: 'black',
-                  width: '10%',
-                  marginHorizontal: 5,
-                }}>
-                {this.state.mediumPizzaQuantity}
-              </Text>
-
-              <TouchableOpacity
-                style={{width: '10%'}}
-                onPress={() =>
-                  this.setState(
-                    {mediumPizzaQuantity: this.state.mediumPizzaQuantity + 1},
-                    () => {
-                      this.total();
-                    },
-                  )
-                }>
-                <Text style={{fontSize: 20, color: 'black'}}>+</Text>
-              </TouchableOpacity>
+              <QuantityComponent type={'medium'} />
             </View>
 
             <View style={{flexDirection: 'row', margin: 10}}>
@@ -224,43 +167,7 @@ export default class App extends Component {
                 <Text style={{fontSize: 15, color: 'grey'}}>$269.99</Text>
               </Text>
 
-              <TouchableOpacity
-                style={{width: '10%'}}
-                onPress={() =>
-                  this.state.largePizzaQuantity > 0
-                    ? this.setState(
-                        {largePizzaQuantity: this.state.largePizzaQuantity - 1},
-                        () => {
-                          this.total();
-                        },
-                      )
-                    : null
-                }>
-                <Text style={{fontSize: 20, color: 'black'}}>-</Text>
-              </TouchableOpacity>
-
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: 'black',
-                  width: '10%',
-                  marginHorizontal: 5,
-                }}>
-                {this.state.largePizzaQuantity}
-              </Text>
-
-              <TouchableOpacity
-                style={{width: '10%'}}
-                onPress={() =>
-                  this.setState(
-                    {largePizzaQuantity: this.state.largePizzaQuantity + 1},
-                    () => {
-                      this.total();
-                    },
-                  )
-                }>
-                <Text style={{fontSize: 20, color: 'black'}}>+</Text>
-              </TouchableOpacity>
+              <QuantityComponent type={'large'} />
             </View>
 
             <View style={{flexDirection: 'row', margin: 10}}>
@@ -282,7 +189,13 @@ export default class App extends Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  reducerData: state.PizzaCalculateReducer,
+});
+export default connect(mapStateToProps)(App);
+
 const styles = StyleSheet.create({
   safeAreaContainer: {flex: 1},
   container: {flex: 1, flexDirection: 'column'},
+  btnStyleView: {margin: 5},
 });

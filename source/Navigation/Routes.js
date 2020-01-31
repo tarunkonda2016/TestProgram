@@ -1,7 +1,7 @@
 import App from '../Components/App'
 
 export const Routes = {
-  Login: {
+  App: {
     screen: App,
     navigationOptions: {
       header: null,
