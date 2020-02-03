@@ -1,7 +1,6 @@
 import PizzaActions from '../Actions/PizzaActions';
 
 const initialState = {
-  data: {},
   selected: 'default',
   smallPizzaPrice: 269.99,
   mediumPizzaPrice: 322.99,
@@ -11,7 +10,6 @@ const initialState = {
   smallPizzaQuantity: 0,
   mediumPizzaQuantity: 0,
   largePizzaQuantity: 0,
-  totalAmount: 0,
 };
 
 export default function PizzaCalculateReducer(state = initialState, action) {
@@ -22,10 +20,46 @@ export default function PizzaCalculateReducer(state = initialState, action) {
       return {...state, data: action.data};
     case PizzaActions.SELECTED:
       return {...state, selected: action.data};
-    case PizzaActions.MINUS_QUANTITY:
-      return state;
+    case PizzaActions.CLEAR:
+      return {
+        ...state,
+        smallPizzaQuantity: 0,
+        mediumPizzaQuantity: 0,
+        largePizzaQuantity: 0,
+      };
     case PizzaActions.ADD_QUANTITY:
-      return state;
+    case PizzaActions.MINUS_QUANTITY:
+      if (action.typePizza === 'small') {
+        return {
+          ...state,
+          smallPizzaQuantity:
+            PizzaActions.ADD_QUANTITY === action.type
+              ? state.smallPizzaQuantity + 1
+              : state.smallPizzaQuantity > 0
+              ? state.smallPizzaQuantity - 1
+              : 0,
+        };
+      } else if (action.typePizza === 'medium') {
+        return {
+          ...state,
+          mediumPizzaQuantity:
+            PizzaActions.ADD_QUANTITY === action.type
+              ? state.mediumPizzaQuantity + 1
+              : state.mediumPizzaQuantity > 0
+              ? state.mediumPizzaQuantity - 1
+              : 0,
+        };
+      } else if (action.typePizza === 'large') {
+        return {
+          ...state,
+          largePizzaQuantity:
+            PizzaActions.ADD_QUANTITY === action.type
+              ? state.largePizzaQuantity + 1
+              : state.largePizzaQuantity > 0
+              ? state.largePizzaQuantity - 1
+              : 0,
+        };
+      }
     default:
       return state;
   }

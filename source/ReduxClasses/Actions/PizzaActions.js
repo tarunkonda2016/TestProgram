@@ -8,5 +8,7 @@ const PizzaActions = {
   MINUS_QUANTITY: 'MINUS',
 
   ADD_QUANTITY: 'ADD',
+
+  CLEAR: 'CLEAR',
 };
 export default PizzaActions;

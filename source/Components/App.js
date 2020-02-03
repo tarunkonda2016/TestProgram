@@ -5,88 +5,80 @@ import {
   SafeAreaView,
   StatusBar,
   Button,
-  TouchableOpacity,
+  InteractionManager,
   StyleSheet,
 } from 'react-native';
 import {connect} from 'react-redux';
 import QuantityComponent from './QuantityComponent';
+import {PizzaActionCreator} from '../ReduxClasses/ActionCreator/PizzaActionCreator';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selected: 'default',
-      smallPizzaPrice: 269.99,
-      mediumPizzaPrice: 322.99,
-      largePizzaPrice: 394.99,
-      smallPizzaQuantity: 0,
-      mediumPizzaQuantity: 0,
-      largePizzaQuantity: 0,
-      totalAmount: 0,
     };
     this.customerClick = this.customerClick.bind(this);
     this.clear = this.clear.bind(this);
     this.colorState = this.colorState.bind(this);
+    this.total = this.total.bind(this);
   }
 
   clear = () => {
-    this.setState(
-      {
-        selected: 'default',
-        smallPizzaQuantity: 0,
-        mediumPizzaQuantity: 0,
-        largePizzaQuantity: 0,
-      },
-      () => {
-        this.total();
-      },
-    );
+    const {dispatch} = this.props;
+    dispatch(PizzaActionCreator.getDataClear());
   };
 
   customerClick = value => {
     if (this.state.selected !== value) {
-      this.setState({selected: value}, () => {
-        this.total();
+      const {dispatch} = this.props;
+      dispatch(PizzaActionCreator.getDataChange(value));
+      InteractionManager.runAfterInteractions(() => {
+        this.setState({selected: value}, () => {
+          this.forceUpdate();
+        });
       });
     }
   };
 
   total() {
-    this.state.totalAmount = 0;
     const {
+      selected,
       smallPizzaPrice,
       smallPizzaQuantity,
       mediumPizzaQuantity,
       mediumPizzaPrice,
       largePizzaQuantity,
       largePizzaPrice,
-    } = this.state;
-    if (this.state.selected === 'default') {
+      amazonLargePizzaOffer,
+      fbLargePizzaOffer,
+    } = this.props.reducerData;
+    if (selected === 'default') {
       let count =
         smallPizzaQuantity * smallPizzaPrice +
         mediumPizzaPrice * mediumPizzaQuantity +
         largePizzaPrice * largePizzaQuantity;
-      this.setState({totalAmount: count});
-    } else if (this.state.selected === 'infosys') {
+      return count;
+    } else if (selected === 'infosys') {
       let smallPizza = (smallPizzaQuantity / 3) * 2;
       let count =
         Math.ceil(smallPizza) * smallPizzaPrice +
         mediumPizzaPrice * mediumPizzaQuantity +
         largePizzaPrice * largePizzaQuantity;
-      this.setState({totalAmount: count});
-    } else if (this.state.selected === 'amazon') {
+      return count;
+    } else if (selected === 'amazon') {
       let count =
         smallPizzaQuantity * smallPizzaPrice +
         mediumPizzaPrice * mediumPizzaQuantity +
-        299.99 * largePizzaQuantity;
-      this.setState({totalAmount: count});
-    } else if (this.state.selected === 'fb') {
+        amazonLargePizzaOffer * largePizzaQuantity;
+      return count;
+    } else if (selected === 'fb') {
       let mediumPizza = (mediumPizzaQuantity / 5) * 4;
       let count =
         Math.ceil(mediumPizza) * mediumPizzaPrice +
         smallPizzaQuantity * smallPizzaPrice +
-        389.99 * largePizzaQuantity;
-      this.setState({totalAmount: count});
+        fbLargePizzaOffer * largePizzaQuantity;
+      return count;
     }
   }
 
@@ -105,8 +97,6 @@ class App extends Component {
   };
 
   render() {
-    console.log('data', this.props.reducerData);
-
     return (
       <>
         <SafeAreaView style={styles.safeAreaContainer}>
@@ -150,7 +140,12 @@ class App extends Component {
                 <Text style={{fontSize: 15, color: 'grey'}}>$269.99</Text>
               </Text>
 
-              <QuantityComponent type={'small'} />
+              <QuantityComponent
+                selected={this.state.selected}
+                type={'small'}
+                {...this.props}
+                quantity={this.props.reducerData.smallPizzaQuantity}
+              />
             </View>
 
             <View style={{flexDirection: 'row', margin: 10}}>
@@ -158,7 +153,12 @@ class App extends Component {
                 Medium Pizza{' '}
                 <Text style={{fontSize: 15, color: 'grey'}}>$322.99</Text>
               </Text>
-              <QuantityComponent type={'medium'} />
+              <QuantityComponent
+                selected={this.state.selected}
+                type={'medium'}
+                {...this.props}
+                quantity={this.props.reducerData.mediumPizzaQuantity}
+              />
             </View>
 
             <View style={{flexDirection: 'row', margin: 10}}>
@@ -167,7 +167,12 @@ class App extends Component {
                 <Text style={{fontSize: 15, color: 'grey'}}>$269.99</Text>
               </Text>
 
-              <QuantityComponent type={'large'} />
+              <QuantityComponent
+                selected={this.state.selected}
+                type={'large'}
+                {...this.props}
+                quantity={this.props.reducerData.largePizzaQuantity}
+              />
             </View>
 
             <View style={{flexDirection: 'row', margin: 10}}>
@@ -176,8 +181,7 @@ class App extends Component {
               <View style={{width: '60%'}}>
                 <Text style={{fontSize: 18, fontWeight: 'bold'}}>
                   Total : $
-                  {Math.round((this.state.totalAmount + Number.EPSILON) * 100) /
-                    100}
+                  {Math.round((this.total() + Number.EPSILON) * 100) / 100}
                 </Text>
               </View>
             </View>

@@ -7,24 +7,36 @@ export const PizzaActionCreator = {
     };
   },
 
+  getDataChange: data => {
+    return {
+      type: PizzaActions.SELECTED,
+      data,
+    };
+  },
+
   getDataSuccess: data => {
     return {
       type: PizzaActions.GET_DATA_SUCCESS,
       data,
     };
   },
-  getDataMinus: (typePizza, add) => {
+  getDataMinus: (typePizza, customer) => {
     return {
       type: PizzaActions.MINUS_QUANTITY,
       typePizza,
-      add,
+      customer,
     };
   },
-  getDataAdd: (typePizza, add) => {
+  getDataAdd: (typePizza, customer) => {
     return {
-      type: PizzaActions.MINUS_QUANTITY,
+      type: PizzaActions.ADD_QUANTITY,
       typePizza,
-      add,
+      customer,
+    };
+  },
+  getDataClear: () => {
+    return {
+      type: PizzaActions.CLEAR,
     };
   },
 };
