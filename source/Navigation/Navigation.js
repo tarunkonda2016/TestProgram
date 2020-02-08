@@ -1,5 +1,5 @@
-import {createStackNavigator} from 'react-navigation-stack';
-import {Routes} from './Routes';
+import { createStackNavigator } from 'react-navigation-stack';
+import { Routes } from './Routes';
 import Colors from '../Utils/Colors';
 
 const Navigator = loggedIn =>
@@ -12,7 +12,7 @@ const Navigator = loggedIn =>
     {
       defaultNavigationOptions: {
         headerStyle: {
-          backgroundColor: Colors.primaryColor,
+          backgroundColor: '#C2C2C2',
         },
         headerTintColor: Colors.white,
         headerTitleStyle: {
